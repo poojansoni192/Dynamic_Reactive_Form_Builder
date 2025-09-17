@@ -1,0 +1,57 @@
+<!-- ✅ FINAL UPDATED app.component.html (Only alignment fixed) -->
+<div class="form-wrapper">
+  <form [formGroup]="formHeader" class="form-box" (ngSubmit)="submitForm()" style="flex-direction: column;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <label for="gridName" style="white-space: nowrap;">Enter Process Name</label>
+      <button type="button" class="btn black" (click)="loadProcess()">Load</button>
+    </div>
+    <input
+      type="text"
+      id="gridName"
+      placeholder="Enter Structure Name"
+      formControlName="processName"
+    />
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<div class="grid-layout" style="display: flex; gap: 16px; align-items: flex-start;">
+  <ng-container *ngFor="let mainGroup of groupedControls; trackBy: trackByMainGroup">
+    <div class="grid-column" style="display: flex; flex-direction: column; gap: 12px;">
+      <ng-container *ngFor="let group of getPaddedGroups(mainGroup.value); let i = index">
+        <div *ngIf="group; else invisibleSpacer" class="grid-control-wrapper" [formGroup]="asFormGroup(group)">
+          <div class="grid-row" style="display: flex; align-items: center; gap: 12px;">
+            <label style="font-weight: bold; width: 40px; user-select: none;">
+              {{ asFormGroup(group).get('name')?.value }}
+            </label>
+            <input
+              type="text"
+              placeholder="Enter value"
+              formControlName="gridname"
+              style="flex-grow: 1; padding: 8px 10px; font-size: 14px;"
+            />
+            <button
+              class="btn green"
+              *ngIf="asFormGroup(group).get('showRight')?.value"
+              (click)="addRight(getIndex(group))"
+            >
+              Add Right
+            </button>
+            <button
+              class="btn red"
+              (click)="remove(getIndex(group))"
+            >
+              Remove
+            </button>
+          </div>
+          <div class="grid-below" *ngIf="asFormGroup(group).get('showBelow')?.value" style="margin-top: 6px;">
+            <button class="btn blue" (click)="addBelow(getIndex(group))">Add Below</button>
+          </div>
+        </div>
+        <ng-template #invisibleSpacer>
+          <div style="height: 92px; visibility: hidden;"></div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
